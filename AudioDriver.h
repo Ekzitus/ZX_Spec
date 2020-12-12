@@ -15,6 +15,7 @@ protected:
 	SDL_AudioDeviceID _dev;
 	SDL_AudioSpec _spec;
 
+
 	std::stack<int> stack;
 	short _level;
 public:

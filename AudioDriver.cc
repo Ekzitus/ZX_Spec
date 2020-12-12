@@ -14,8 +14,10 @@ void real_audiodriver_cb(void * data, Uint8 * stream, int len)
 
 }
 
+
 AudioDriver::AudioDriver()
 {
+
 
 	std::cout << "---------------AudioDriver::AudioDriver()---------------" << std::endl;
 	_spec.callback = real_audiodriver_cb;
@@ -29,7 +31,9 @@ AudioDriver::AudioDriver()
 
 	_dev = SDL_OpenAudioDevice(nullptr, 0, &_spec, &obt, 0);
 	std::cout << "---------------_dev = SDL_OpenAudioDevice(nullptr, 0, &_spec, &obt, 0);---------------" << std::endl;
-	SDL_PauseAudioDevice(0, 0);
+
+
+	SDL_PauseAudioDevice(_dev, 0);
 	std::cout << "---------------SDL_PauseAudioDevice(0, 0);---------------" << std::endl;
 
 	_level = 0;
@@ -38,7 +42,8 @@ AudioDriver::AudioDriver()
 AudioDriver::~AudioDriver()
 {
 	std::cout << "-------------void real_audiodriver_cb(void * data, Uint8 * stream, int len)-----------------" << std::endl;
-	SDL_PauseAudioDevice(0, 1);
+	SDL_PauseAudioDevice(_dev, 1);
+//	SDL_CloseAudioDevice(_dev);
 	SDL_CloseAudioDevice(_dev);
 
 }
