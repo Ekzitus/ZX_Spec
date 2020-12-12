@@ -7,7 +7,7 @@
 
 void real_audiodriver_cb(void * data, Uint8 * stream, int len)
 {
-	std::cout << "-------------real_audiodriver_cb-----------------" << std::endl;
+//	std::cout << "-------------real_audiodriver_cb-----------------" << std::endl;
 	reinterpret_cast<AudioDriver*>(data)->callback(
 			reinterpret_cast<short *>(stream),
 			size_t(len));
@@ -49,17 +49,17 @@ AudioDriver::~AudioDriver()
 
 void AudioDriver::callback(short int * buffer, size_t len)
 {
-	std::cout << "-------------callback-----------------" << std::endl;
-//	std::cout << len << std::endl;
+//	std::cout << "-------------callback-----------------" << std::endl;
+//	std::cout << queue.front() << std::endl;
 	for (size_t i = 0; i < len; i++){
-//		std::cout << _level << std::endl;
 		if(!queue.empty()){
-//			buffer[i] = queue.front(); //передает первый элемент очереди
-			std::cout << queue.front() << std::endl;
+			buffer[i] = queue.front(); //передает первый элемент очереди
+			queue.pop(); //удаляет первый элемент очереди
+//			std::cout << queue.front() << std::endl;
 		}else{
 			buffer[i] = _level;
 		}
-		queue.pop(); //удаляет первый элемент очереди
+
 	}
 
 }

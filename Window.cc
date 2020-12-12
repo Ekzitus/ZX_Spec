@@ -122,14 +122,14 @@ void Window::do_logic()
 {
 	while(kol_tac < 70561){
 		cpu.ticks(320);
-
+		_adrv.addsample();
 		while(clock::now() < _vr ){
 
 		}
 		_vr= _vr + std::chrono::microseconds(91);
 		kol_tac = kol_tac + 320;
 	}
-//	_adrv.addsample();
+
 	kol_tac = kol_tac - 70560;
 
 
