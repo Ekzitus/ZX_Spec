@@ -7,7 +7,7 @@
 
 
 #include <SDL2/SDL.h>
-#include <stack>
+#include <queue>
 
 class AudioDriver
 {
@@ -16,7 +16,7 @@ protected:
 	SDL_AudioSpec _spec;
 
 
-	std::stack<int> stack;
+	std::queue<int> queue;
 	short _level;
 public:
 	AudioDriver();
