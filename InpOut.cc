@@ -9,7 +9,6 @@ void IO::write(unsigned address, uint8_t value) {
 		_port_fe = value;
 
 		int lev = (_port_fe >> 3) & 0x03;
-		std::cout << lev << " IO1" << std::endl;
 		switch (lev) {
 		case 0x00:
 			_adrv->set_level(-16384 - 8192);
