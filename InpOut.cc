@@ -25,7 +25,7 @@ void IO::write(unsigned address, uint8_t value) {
 		default:
 			;
 		}
-	} else if((address & 4) == 0) {
+	} else if ((address & 4) == 0) {
 		_port_7ffd = value;
 		std::cout << "Порт 7ffd:" << _port_fe << std::endl;
 	}

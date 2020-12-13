@@ -63,7 +63,7 @@ protected:
 	ROM & _rom;
 	IO & _io;
 public:
-	Port7FFD port_7ffd;
+
 	AddressSpace(RAM & ram, ROM & rom, IO & io) : _ram(ram), _rom(rom), _io(io) {}
 
 //	AddressSpace();
