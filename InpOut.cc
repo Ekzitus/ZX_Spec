@@ -25,12 +25,19 @@ void IO::write(unsigned address, uint8_t value) {
 		default:
 			;
 		}
+	} else if((address & 4) == 0) {
+		_port_7ffd = value;
+		std::cout << "Порт 7ffd:" << _port_fe << std::endl;
 	}
+
 }
+
+
 
 uint8_t IO::read(unsigned address) const {
 	uint8_t a = (address >> 8);
 	uint8_t p = (address & 0xff);
+
 
 	if (p == 0xfe) {
 		switch (a) {

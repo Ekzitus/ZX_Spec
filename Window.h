@@ -45,8 +45,8 @@ public:
 
 	void main();
 protected:
-	ROM rom { "zx.rom" };
-	RAM ram { 16 };
+	ROM rom { "128.rom" };
+	RAM ram { 17 };
 	IO io { &_adrv };
 	AddressSpace system_bus { ram, rom, io };
 	Z80CPU cpu { system_bus };

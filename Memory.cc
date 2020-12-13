@@ -26,24 +26,33 @@ uint8_t AddressSpace::read(unsigned address, bool io) {
 	if (io == true)
 		return _io.read(address);
 	else {
-		if (address < 16384)
+		if (address < 32768)
 			return _rom.read(address);
 		else
 			return _ram.read(address);
 
 	}
 }
-void AddressSpace::write16(unsigned address, uint16_t value) {
 
-	write(address, (value >> 0) & 0x00ff);
-	write(address + 1, (value >> 8) & 0x00ff);
-
-}
-uint16_t AddressSpace::read16(unsigned address) {
-
-	uint16_t result = 0;
-	result |= read(address);
-	result |= uint16_t(read(address)) << 8;
-	return result;
-
+uint32_t AddressSpace::translate_mem_addr(uint16_t address)
+{
+	uint32_t offset = address & 0x3fff;
+	uint32_t real_address = offset;
+	unsigned page = (address >> 14) & 0x03;
+	if (page == 0) { // Это страница ПЗУ
+		if (port_7ffd.rom_page() == 0)
+			real_address |= 0x20000;
+		else
+			real_address |= 0x24000;
+	}	else if (page == 1) { // Это страница видеопамяти
+		if (port_7ffd.vid_page() == 0)
+			real_address |= 0x14000;
+		else
+			real_address |= 0x1c000;
+	}	else if (page == 2) { // это общая страница оперативки, банк 2
+		real_address |= 0x08000;
+	}	else {
+		real_address |= port_7ffd.ram_page() << 14;
+	}
+	return real_address;
 }

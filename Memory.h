@@ -14,7 +14,10 @@
 class Memory {
 protected:
 	std::vector<uint8_t> _contents;
+
+
 public:
+
 	virtual ~Memory() = default;
 	virtual void write(unsigned addr, uint8_t value) = 0;
 	virtual uint8_t read(unsigned addr) { return _contents[addr % _contents.size()]; };
@@ -54,18 +57,21 @@ public:
 };
 
 class AddressSpace {
+
 protected:
 	RAM & _ram;
 	ROM & _rom;
 	IO & _io;
 public:
-	AddressSpace(RAM & ram, ROM & rom, IO & io) : _ram(ram), _rom(rom), _io(io) { }
+	Port7FFD port_7ffd;
+	AddressSpace(RAM & ram, ROM & rom, IO & io) : _ram(ram), _rom(rom), _io(io) {}
+
+//	AddressSpace();
 
 	void write(unsigned address, uint8_t value, bool io = false);
 	uint8_t read(unsigned address, bool io = false);
-
-	void write16(unsigned address, uint16_t value);
-	uint16_t read16(unsigned address);
+	
+	uint32_t translate_mem_addr(uint16_t address);
 };
 
 #endif /* MEMORY_H_ */
