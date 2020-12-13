@@ -28,7 +28,7 @@ public:
 	uint8_t mem() const {return _port_7ffd;}
 	uint8_t ram() const {return _port_7ffd & 0x07;}
 	uint8_t rom() const {return ((_port_7ffd & 0x10) == 0) ? 0 : 1;}
-	uint8_t border() const {return _port_7ffd & 0x07;}
+	uint8_t border() const {return _port_fe & 0x07;}
 
 	bool vid() const {return (_port_7ffd & 0x08) != 0;};
 
