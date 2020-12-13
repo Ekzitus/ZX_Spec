@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <memory>
 #include <chrono>
+#include <iostream>
 
 #include "Z80CPU.h"
 #include "InpOut.h"
@@ -46,7 +47,7 @@ public:
 	void main();
 protected:
 	ROM rom { "128.rom" };
-	RAM ram { 17 };
+	RAM ram { 16 };
 	IO io { &_adrv };
 	AddressSpace system_bus { ram, rom, io };
 	Z80CPU cpu { system_bus };

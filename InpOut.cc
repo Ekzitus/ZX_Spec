@@ -22,14 +22,12 @@ void IO::write(unsigned address, uint8_t value) {
 		case 0x03:
 			_adrv->set_level(16384 + 8192);
 			break;
-		default:
-			;
+		default:;
 		}
-	} else if ((address & 4) == 0) {
-		_port_7ffd = value;
-		std::cout << "Порт 7ffd:" << _port_fe << std::endl;
+	} else {
+		if ((address & 0x8002) == 0)
+			_port_7ffd = value;
 	}
-
 }
 
 

@@ -71,7 +71,6 @@ public:
 	void write(unsigned address, uint8_t value, bool io = false);
 	uint8_t read(unsigned address, bool io = false);
 	
-	uint32_t translate_mem_addr(uint16_t address);
 };
 
 #endif /* MEMORY_H_ */

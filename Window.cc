@@ -166,6 +166,8 @@ void Window::render()
 					( a10a8 << 5) |
 					(  a4a0 << 0);
 
+
+
 			uint8_t val = ram.read(raster_addr);
 			uint8_t attr = ram.read(attr_addr);
 			uint8_t paper_col = ((attr >> 3) & 0x07) | ((attr & 0x40) >> 3);
