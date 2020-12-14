@@ -56,7 +56,7 @@
  * and everything works fine.
  *
  */
-
+ 
 /* Flags for doIncDec() */
 static const int ID_INC = 0;
 static const int ID_DEC = 1;
@@ -108,10 +108,10 @@ typedef void (*Z80OpcodeFunc) (Z80Context* ctx);
 struct Z80OpcodeEntry
 {
 	Z80OpcodeFunc func;
-
+	
 	int operand_type;
 	char* format;	
-
+	
 	struct Z80OpcodeTable* table;
 };
 
@@ -177,7 +177,7 @@ static void ioWrite (Z80Context* ctx, ushort addr, byte val)
  *  Flag operations
  * --------------------------------------------------------- 
  */
-
+ 
 /** Sets a flag */
 static void setFlag(Z80Context* ctx, Z80Flags flag)
 {
@@ -263,7 +263,7 @@ static void adjustLogicFlag (Z80Context* ctx, int flagH)
  *  Condition checks
  * --------------------------------------------------------- 
  */
-
+ 
 typedef enum
 {
 	C_,
@@ -281,28 +281,28 @@ static int condition(Z80Context* ctx, Z80Condition cond)
 {
 	if (cond == C_)
 		return 1;
-
+		
 	if (cond == C_Z)
 		return GETFLAG(F_Z);
-
+	
 	if (cond == C_NZ)
 		return !GETFLAG(F_Z);
-
+	
 	if (cond == C_C)
 		return GETFLAG(F_C);
-
+	
 	if (cond == C_NC)
 		return !GETFLAG(F_C);
-
+		
 	if (cond == C_M)
 		return GETFLAG(F_S);
-
+	
 	if (cond == C_P)
 		return !GETFLAG(F_S);
-
+		
 	if (cond == C_PE)
 		return GETFLAG(F_PV);
-
+		
 /*	if (cond == C_PO)*/
 		return !GETFLAG(F_PV);
 }
@@ -312,8 +312,8 @@ static int condition(Z80Context* ctx, Z80Condition cond)
  *  Generic operations
  * --------------------------------------------------------- 
  */
-
-
+ 
+ 
 static int doComplement(byte v)
 {
 	if ((v & 0x80) == 0)
@@ -326,7 +326,7 @@ static int doComplement(byte v)
 	return -v;
 }
 
-
+ 
 /** Do an arithmetic operation (ADD, SUB, ADC, SBC y CP) */
 static byte doArithmetic (Z80Context* ctx, byte value, int withCarry, int isSub)
 {
@@ -649,7 +649,7 @@ static void doDAA(Z80Context * ctx) {
   VALFLAG(F_PV, parityBit[BR.A]);
   adjustFlags(ctx, BR.A);
 }
-
+ 
 #include "codegen/opcodes_impl.c"
 
 
@@ -664,7 +664,7 @@ static void do_execute(Z80Context* ctx)
 	struct Z80OpcodeTable* current = &opcodes_main;
 	struct Z80OpcodeEntry* entries = current->entries;
 	Z80OpcodeFunc func;
-
+	
 	byte opcode;
 	int offset = 0;
 	do
@@ -792,10 +792,10 @@ void Z80Debug (Z80Context* ctx, char* dump, char* decode)
 	int offset = 0;
 	int PC = ctx->PC;
 	int size = 0;
-
+	
 	if (dump)
 		dump[0] = 0;
-
+		
 	if (decode)
 		decode[0] = 0;
 
@@ -803,14 +803,14 @@ void Z80Debug (Z80Context* ctx, char* dump, char* decode)
 	{
 		opcode = read8(ctx, PC + offset);
 		size++;
-
+		
 		PC++;
 		fmt = entries[opcode].format;
 		if (fmt != NULL)
 		{			
 			PC -= offset;
 			parm = read16(ctx, PC);
-
+		
 			if (entries[opcode].operand_type == OP_NONE)
 				size++;
 			else
@@ -820,10 +820,10 @@ void Z80Debug (Z80Context* ctx, char* dump, char* decode)
 				parm &= 0xFF;
 				size--;
 			}
-
+				
 			if (decode)
 				sprintf(decode, fmt, parm);
-
+			
 			PC += offset;
 			break;
 		}
@@ -841,7 +841,7 @@ void Z80Debug (Z80Context* ctx, char* dump, char* decode)
 			break;	
 		}
 	} while(1);	
-
+	
 	if (dump)
 	{
 		for (offset = 0; offset < size; offset++)

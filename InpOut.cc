@@ -7,14 +7,13 @@
 void IO::write(unsigned address, uint8_t value) {
 	if ((address & 1) == 0) {
 		_port_fe = value;
-
 		int lev = (_port_fe >> 3) & 0x03;
 		switch (lev) {
 		case 0x00:
-			_adrv->set_level(-16384 - 8192);
+			_adrv->set_level(16384 - 8192);
 			break;
 		case 0x01:
-			_adrv->set_level(-16384);
+			_adrv->set_level(16384);
 			break;
 		case 0x02:
 			_adrv->set_level(16384);
@@ -24,10 +23,11 @@ void IO::write(unsigned address, uint8_t value) {
 			break;
 		default:;
 		}
-	} else {
-		if ((address & 0x8002) == 0)
+	} else if ((address & 0x8002) == 0){
 			_port_7ffd = value;
-	}
+    }  else if((address & 0xff) == 0xff){
+
+    }
 }
 
 

@@ -52,6 +52,7 @@ void AudioDriver::callback(short int * buffer, size_t len)
 
 void AudioDriver::addsample()
 {
+//	std::cout << _level << std::endl;
 	queue.push(_level); 			   //добавляет элемент в очередь
 }
 

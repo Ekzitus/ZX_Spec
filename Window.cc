@@ -18,7 +18,7 @@ Window::Window(int width, int height)
 {
 
 	_vr =clock::now()+std::chrono::seconds(2);
-	kol_tac = 0;
+	kol_tac =0;
 
 	_window = std::shared_ptr<SDL_Window>(
 			SDL_CreateWindow("Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN), SDL_DestroyWindow);
@@ -120,14 +120,18 @@ void Window::handle_keys(const Uint8 *keys)
 
 void Window::do_logic()
 {
+
 	while(kol_tac < 70561){
+
 		cpu.ticks(320);
 		_adrv.addsample();
 		while(clock::now() < _vr ){
 
 		}
 		_vr= _vr + std::chrono::microseconds(91);
+
 		kol_tac = kol_tac + 320;
+
 	}
 
 	kol_tac = kol_tac - 70560;

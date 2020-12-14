@@ -14,8 +14,6 @@ class AudioDriver
 protected:
 	SDL_AudioDeviceID _dev;
 	SDL_AudioSpec _spec;
-
-
 	std::queue<int> queue;
 	short _level;
 public:

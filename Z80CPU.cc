@@ -1,7 +1,3 @@
-/*
- * Z80CPU.cc
- */
-
 #include <fstream>
 #include <cstdint>
 #include <vector>
@@ -72,17 +68,21 @@ struct Z80_Header_2
 };
 #pragma pack(pop)
 
-byte In_memo(void* par, ushort address) {
-	return reinterpret_cast<Z80CPU*>(par)->_bus.read(address);
+byte In_mem(void* param, ushort address)
+{
+	return reinterpret_cast<Z80CPU*>(param)->_bus.read(address);
 }
-void Out_memo(void* par, ushort address, byte data) {
-	reinterpret_cast<Z80CPU*>(par)->_bus.write(address, data);
+void Out_mem(void* param, ushort address,byte data)
+{
+	reinterpret_cast<Z80CPU*>(param)->_bus.write(address, data);
 }
-byte In_inpout(void* par, ushort address) {
-	return reinterpret_cast<Z80CPU*>(par)->_bus.read(address, true);
+byte In_io(void* param, ushort address)
+{
+	return reinterpret_cast<Z80CPU*>(param)->_bus.read(address,true);
 }
-void Out_inpout(void* par, ushort address, byte data) {
-	reinterpret_cast<Z80CPU*>(par)->_bus.write(address, data, true);
+void Out_io(void* param, ushort address,byte data)
+{
+	reinterpret_cast<Z80CPU*>(param)->_bus.write(address, data,true);
 }
 
 void Z80CPU::save_state_sna(const char *filename)
@@ -109,7 +109,7 @@ void Z80CPU::save_state_sna(const char *filename)
 	hdr.IM = _context.IM;
 	hdr.FE = 0; // FIXME: ��������� �������� ���� �������
 	hdr.SP -= 2;
-	data[hdr.SP - 16384] =  _context.PC & 0x00ff;
+	data[hdr.SP - 16384] = _context.PC & 0x00ff;
 	data[hdr.SP - 16384 + 1] = _context.PC >> 8;
 
 	std::fstream sna;
@@ -133,9 +133,9 @@ void Z80CPU::load_state_sna(const char *filename)
 	data[hdr.SP - 16384] = _context.PC & 0x00ff;
 	data[hdr.SP - 16384 + 1] = _context.PC >> 8;
 
-	_context.PC = 0;
-	_context.PC |= data[hdr.SP - 16384];
-	_context.PC |= (data[hdr.SP - 16384 + 1] << 8);
+	_context.PC  = 0;
+	_context.PC  |= data[hdr.SP - 16384];
+	_context.PC  |= (data[hdr.SP - 16384 + 1] << 8);
 	hdr.SP += 2;
 
 	for (unsigned memptr = 16384; memptr < 65536; memptr++)
@@ -143,7 +143,7 @@ void Z80CPU::load_state_sna(const char *filename)
 
 
 	_context.I = hdr.I;
-	_context.R2.wr.HL = hdr.HL1;
+	_context.R2.wr.HL= hdr.HL1;
 	_context.R2.wr.DE = hdr.DE1;
 	_context.R2.wr.BC = hdr.BC1;
 	_context.R2.wr.AF = hdr.AF1;
@@ -187,10 +187,10 @@ void Z80CPU::load_state_z80(const char *filename)
 
 	_context.R1.br.A = hdr1.A;
 	_context.R1.br.F = hdr1.F;
-	_context.R1.br.C = hdr1.C;
+	_context.R1.br.C= hdr1.C;
 	_context.R1.br.B = hdr1.B;
 	_context.R1.br.L = hdr1.L;
-	_context.R1.br.H = hdr1.H;
+	_context.R1.br.H= hdr1.H;
 	_context.PC = real_pc;
 	_context.R1.wr.SP = hdr1.SP;
 	_context.I = hdr1.I;
@@ -203,7 +203,7 @@ void Z80CPU::load_state_z80(const char *filename)
 	_context.R2.br.D = hdr1.D1;
 	_context.R2.br.L = hdr1.L1;
 	_context.R2.br.H = hdr1.H1;
-	_context.R2.br.A = hdr1.A1;
+	_context.R2.br.A= hdr1.A1;
 	_context.R2.br.F = hdr1.F1;
 	_context.R1.br.IYl = hdr1.IYL;
 	_context.R1.br.IYh = hdr1.IYH;
@@ -224,7 +224,7 @@ void Z80CPU::load_state_z80(const char *filename)
 			if (b1 != 0xed) {
 				data[memptr] = b1;
 				memptr++;
-			} else { // ������ ed ��������
+			} else { // ������ ed ��������!
 				z80f.read(reinterpret_cast<char *>(&b2), 1);
 				if (b2 != 0xed) {
 					data[memptr] = b1;
@@ -335,6 +335,68 @@ void Z80CPU::load_state_z80_libspectrum(const char * filename)
 			filename);
 
 	libspectrum_snap_a(snap);
+
+	_context.I = libspectrum_snap_i(snap);
+	_context.R = libspectrum_snap_r(snap);
+	_context.R1.wr.HL = libspectrum_snap_hl(snap);
+	_context.R1.wr.DE = libspectrum_snap_de(snap);
+	_context.R1.wr.BC = libspectrum_snap_bc(snap);
+	_context.R1.br.A = libspectrum_snap_a(snap);
+	_context.R1.br.F = libspectrum_snap_f(snap);
+	_context.R1.wr.IX = libspectrum_snap_ix(snap);
+	_context.R1.wr.IY = libspectrum_snap_iy(snap);
+	_context.R1.wr.SP = libspectrum_snap_sp(snap);
+
+	_context.R2.wr.HL = libspectrum_snap_hl_(snap);
+	_context.R2.wr.DE = libspectrum_snap_de_(snap);
+	_context.R2.wr.BC = libspectrum_snap_bc_(snap);
+	_context.R2.br.A = libspectrum_snap_a_(snap);
+	_context.R2.br.F = libspectrum_snap_f_(snap);
+	_context.R2.wr.IX = libspectrum_snap_ix(snap);
+	_context.R2.wr.IY = libspectrum_snap_iy(snap);
+	_context.R2.wr.SP = libspectrum_snap_sp(snap);
+
+	_context.IFF1 = libspectrum_snap_iff1(snap);
+	_context.IFF2 = libspectrum_snap_iff2(snap);
+
+	_bus.write(0xfe, libspectrum_snap_out_ula(snap), true);
+
+	// �������� � ������������
+	for (unsigned memptr = 0x4000; memptr < 0x8000; memptr++)
+		_bus.write(memptr, libspectrum_snap_pages(snap, 5)[memptr - 0x4000]);
+	// �������� ����� �����������
+	for (unsigned memptr = 0x8000; memptr < 0xc000; memptr++)
+		_bus.write(memptr, libspectrum_snap_pages(snap, 2)[memptr - 0x8000]);
+	// �������� � �����
+	for (unsigned memptr = 0xc000; memptr < 0x10000; memptr++)
+		_bus.write(memptr, libspectrum_snap_pages(snap, 0)[memptr - 0xc000]);
+
+
+	libspectrum_snap_free(snap);
+}
+
+void Z80CPU::load_state_tape_libspectrum(const char * filename)
+{
+	std::vector<uint8_t> buffer;
+	std::fstream z80file;
+	z80file.open(filename, std::ios::in | std::ios::binary | std::ios::ate);
+	buffer.resize(z80file.tellg());
+	z80file.seekg(0);
+	z80file.read(reinterpret_cast<char*>(&buffer[0]), buffer.size());
+	z80file.close();
+
+	libspectrum_tape * tape;
+
+	tape = libspectrum_tape_alloc();
+
+	libspectrum_tape_read(
+			tape,
+			&buffer[0],
+			buffer.size(),
+			LIBSPECTRUM_ID_TAPE_TAP,
+			filename);
+
+	libspectrum_tape_a(tape);
 
 	_context.I = libspectrum_snap_i(snap);
 	_context.R = libspectrum_snap_r(snap);

@@ -14,8 +14,6 @@
 class Memory {
 protected:
 	std::vector<uint8_t> _contents;
-
-
 public:
 
 	virtual ~Memory() = default;

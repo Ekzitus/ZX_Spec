@@ -10,7 +10,7 @@
 
 class IO {
 protected:
-	uint8_t _port_fe { 0xfe };
+	uint8_t _port_fe { 0x00 };
 	uint8_t _port_7ffd { 0x00 };
 
 	uint8_t _ear { 0xfe };
